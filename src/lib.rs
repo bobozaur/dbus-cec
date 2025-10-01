@@ -1,98 +1,51 @@
-use std::sync::Arc;
+mod interface;
+mod power_status;
+mod request;
 
-use cec_rs::{CecConnection, CecConnectionCfgBuilder, CecDeviceTypeVec, CecLogicalAddress};
-use serde::{Deserialize, Serialize};
+use std::error::Error;
+
+use cec_rs::{CecConnectionCfgBuilder, CecDeviceTypeVec, CecLogicalAddress};
+use tokio::sync::mpsc;
+use tokio::task;
+use tracing::instrument;
 use zbus::conn::Builder;
-use zbus::interface;
-use zbus::zvariant::Type;
 
+use crate::interface::{CecIface, OBJECT_NAME, SERVICE_NAME};
+
+#[instrument]
 pub async fn run(
     device_name: String,
     device_types: CecDeviceTypeVec,
-    target_device: CecLogicalAddress,
-) {
+    target: CecLogicalAddress,
+) -> Result<(), Box<dyn Error>> {
+    tracing::info!("Opening CEC connection...");
     let cec_connection = CecConnectionCfgBuilder::default()
         .device_name(device_name)
         .device_types(device_types)
-        .build()
-        .unwrap()
+        .build()?
         .open()
-        .unwrap();
+        .map_err(|e| format!("{e:?}"))?;
 
-    let cec_power_controller = CecPowerController {
-        conn: Arc::new(cec_connection),
-        target: target_device,
-    };
+    // Setup bounded channel between DBus interface and background task.
+    // We don't want buffering so a size of 1 is fine.
+    let (tx, rx) = mpsc::channel(1);
 
-    let _connection = Builder::system()
-        .unwrap()
-        .name(SERVICE_NAME)
-        .unwrap()
-        .serve_at(OBJECT_NAME, cec_power_controller)
-        .unwrap()
+    tracing::info!("Starting background task...");
+    let task_handle =
+        task::spawn_blocking(move || request::background_task(cec_connection, target, rx));
+
+    // Can't see this documented anywhere but I assume
+    // that dropping the DBus connection would be bad?
+    tracing::info!("Opening DBus connection...");
+    let _dbus_connection = Builder::system()?
+        .name(SERVICE_NAME)?
+        .serve_at(OBJECT_NAME, CecIface(tx))?
         .build()
-        .await
-        .unwrap();
+        .await?;
 
-    loop {
-        std::future::pending::<()>().await;
-    }
-}
+    // Await background task since [`zbus`] works in the background.
+    tracing::info!("DBus interface ready!");
+    task_handle.await?;
 
-#[derive(Debug, Deserialize, Serialize, Type)]
-#[zvariant(signature = "s")]
-enum CecPowerStatus {
-    On,
-    Standby,
-    Unknown,
-}
-
-struct CecPowerController {
-    conn: Arc<CecConnection>,
-    target: CecLogicalAddress,
-}
-
-const SERVICE_NAME: &str = "com.home.HdmiCec";
-const OBJECT_NAME: &str = "/com/home/HdmiCec/Tv";
-
-#[interface(name = "com.home.HdmiCec.Power", spawn = false)]
-impl CecPowerController {
-    async fn power_on(&self) -> zbus::fdo::Result<()> {
-        let connection = self.conn.clone();
-        let device = self.target;
-
-        tokio::task::spawn_blocking(move || connection.send_power_on_devices(device).unwrap())
-            .await
-            .unwrap();
-
-        Ok(())
-    }
-
-    async fn power_off(&self) -> zbus::fdo::Result<()> {
-        let connection = self.conn.clone();
-        let device = self.target;
-
-        tokio::task::spawn_blocking(move || {
-            connection.send_standby_devices(device).unwrap();
-        })
-        .await
-        .unwrap();
-
-        Ok(())
-    }
-
-    async fn power_status(&self) -> CecPowerStatus {
-        let connection = self.conn.clone();
-        let device = self.target;
-
-        tokio::task::spawn_blocking(move || match connection.get_device_power_status(device) {
-            cec_rs::CecPowerStatus::On => CecPowerStatus::On,
-            cec_rs::CecPowerStatus::Standby => CecPowerStatus::Standby,
-            cec_rs::CecPowerStatus::InTransitionStandbyToOn
-            | cec_rs::CecPowerStatus::InTransitionOnToStandby
-            | cec_rs::CecPowerStatus::Unknown => CecPowerStatus::Unknown,
-        })
-        .await
-        .unwrap()
-    }
+    Ok(())
 }
