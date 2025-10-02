@@ -52,7 +52,7 @@ jobs:
   release:
     name: Release DEB package
     needs: clippy
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-22.04-arm
     permissions:
       contents: write
     steps:
