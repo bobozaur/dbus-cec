@@ -5,13 +5,19 @@ mod request;
 use std::error::Error;
 
 use cec_rs::{CecConnectionCfgBuilder, CecDeviceTypeVec, CecLogicalAddress};
-use tokio::sync::mpsc;
-use tokio::task;
+use tokio::{sync::mpsc, task};
 use tracing::instrument;
 use zbus::conn::Builder;
 
 use crate::interface::{CecIface, OBJECT_NAME, SERVICE_NAME};
 
+/// Runs the daemon by:
+/// - starting a CEC connection and registering a background task for communication
+/// - starting an async `DBus` connection to the system bus and registering the service
+/// - pipes calls of `DBus` methods to the background tasks so they are acted upon
+///
+/// # Errors
+/// Will error out if the CEC or `DBus` connections could not be established.
 #[instrument]
 pub async fn run(
     device_name: String,

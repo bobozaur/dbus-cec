@@ -1,4 +1,4 @@
-//! Module containing the DBus interface and DBus related code, arranged for visibility and locality.
+//! Module containing the `DBus` interface and `DBus` related code, arranged for visibility and locality.
 
 use std::borrow::Cow;
 
@@ -9,14 +9,14 @@ use zbus::{DBusError, interface};
 
 use crate::{power_status::CecPowerStatus, request::CecRequest};
 
-/// DBus interface that sends requrests to the background task and awaits their response.
+/// `DBus` interface that sends requrests to the background task and awaits their response.
 #[derive(Debug)]
 pub struct CecIface(pub mpsc::Sender<CecRequest>);
 
 pub const SERVICE_NAME: &str = "com.home.HdmiCec";
 pub const OBJECT_NAME: &str = "/com/home/HdmiCec/Tv";
 
-/// Error returned by the DBus interface [`CecIface`].
+/// Error returned by the `DBus` interface [`CecIface`].
 #[derive(DBusError, Debug)]
 #[zbus(prefix = "com.home.HdmiCec")]
 pub enum CecError {
