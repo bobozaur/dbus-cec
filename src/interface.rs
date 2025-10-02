@@ -1,4 +1,5 @@
-//! Module containing the `DBus` interface and `DBus` related code, arranged for visibility and locality.
+//! Module containing the `DBus` interface and `DBus` related code, arranged for visibility and
+//! locality.
 
 use std::borrow::Cow;
 
@@ -36,7 +37,10 @@ impl CecIface {
     async fn power_on(&self) -> Result<(), CecError> {
         tracing::debug!("DBus interface PowerOn called");
         let (tx, rx) = oneshot::channel();
-        self.0.send(CecRequest::On(tx)).await.expect(Self::REQ_SENDER_ERR);
+        self.0
+            .send(CecRequest::On(tx))
+            .await
+            .expect(Self::REQ_SENDER_ERR);
         rx.await.expect(Self::RESP_RECEIVER_ERR)
     }
 
@@ -45,7 +49,10 @@ impl CecIface {
     async fn power_off(&self) -> Result<(), CecError> {
         tracing::debug!("DBus interface PowerOff called");
         let (tx, rx) = oneshot::channel();
-        self.0.send(CecRequest::Off(tx)).await.expect(Self::REQ_SENDER_ERR);
+        self.0
+            .send(CecRequest::Off(tx))
+            .await
+            .expect(Self::REQ_SENDER_ERR);
         rx.await.expect(Self::RESP_RECEIVER_ERR)
     }
 
@@ -54,7 +61,10 @@ impl CecIface {
     async fn power_status(&self) -> CecPowerStatus {
         tracing::debug!("DBus interface PoweStatus called");
         let (tx, rx) = oneshot::channel();
-        self.0.send(CecRequest::Status(tx)).await.expect(Self::REQ_SENDER_ERR);
+        self.0
+            .send(CecRequest::Status(tx))
+            .await
+            .expect(Self::REQ_SENDER_ERR);
         rx.await.expect(Self::RESP_RECEIVER_ERR)
     }
 }
