@@ -1,5 +1,5 @@
-//! Module containing the `DBus` interface and `DBus` related code, arranged for visibility and
-//! locality.
+//! Module containing the `DBus` interface and `DBus` related code,
+//! arranged for visibility and locality.
 
 use std::borrow::Cow;
 
@@ -15,7 +15,6 @@ use crate::{power_status::CecPowerStatus, request::CecRequest};
 pub struct CecIface(pub mpsc::Sender<CecRequest>);
 
 pub const SERVICE_NAME: &str = "com.home.HdmiCec";
-pub const OBJECT_NAME: &str = "/com/home/HdmiCec/Tv";
 
 /// Error returned by the `DBus` interface [`CecIface`].
 #[derive(DBusError, Debug)]

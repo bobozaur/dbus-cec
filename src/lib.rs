@@ -4,12 +4,13 @@ mod request;
 
 use std::error::Error;
 
-use cec_rs::{CecConnectionCfgBuilder, CecDeviceTypeVec, CecLogicalAddress};
+use cec_rs::CecConnectionCfgBuilder;
+pub use cec_rs::{CecDeviceType, CecDeviceTypeVec, CecLogicalAddress};
 use tokio::{sync::mpsc, task};
 use tracing::instrument;
 use zbus::conn::Builder;
 
-use crate::interface::{CecIface, OBJECT_NAME, SERVICE_NAME};
+use crate::interface::{CecIface, SERVICE_NAME};
 
 /// Runs the daemon by:
 /// - starting a CEC connection and registering a background task for communication
@@ -40,12 +41,15 @@ pub async fn run(
     let task_handle =
         task::spawn_blocking(move || request::background_task(cec_connection, target, rx));
 
+    // DBus object name
+    let object_name = format!("/{}/{target:?}", SERVICE_NAME.replace('.', "/"));
+
     // Can't see this documented anywhere but I assume
     // that dropping the DBus connection would be bad?
-    tracing::info!("Opening DBus connection...");
+    tracing::info!("Opening DBus connection to serve object {object_name}...");
     let _dbus_connection = Builder::system()?
         .name(SERVICE_NAME)?
-        .serve_at(OBJECT_NAME, CecIface(tx))?
+        .serve_at(object_name, CecIface(tx))?
         .build()
         .await?;
 
