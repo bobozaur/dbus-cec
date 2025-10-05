@@ -1,6 +1,6 @@
 # Raspberry Pi <-> TV
 
-Raspberry Pi systemd DBus service for TV power control through HDMI-CEC.
+Raspberry Pi systemd D-Bus service for TV power control through HDMI-CEC.
 
 ## Features
 

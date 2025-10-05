@@ -4,7 +4,7 @@ use tracing::instrument;
 
 use crate::{interface::CecError, power_status::CecPowerStatus};
 
-/// A request the `DBus` interface makes to the background task for interacting with the CEC
+/// A request the D-Bus interface makes to the background task for interacting with the CEC
 /// connection.
 #[derive(Debug)]
 pub enum CecRequest {
@@ -14,7 +14,7 @@ pub enum CecRequest {
 }
 
 /// Background task that awaits requests and issues commands using the CEC connection.
-/// Used so as not to block the async `DBus` interface for too long.
+/// Used so as not to block the async D-Bus interface for too long.
 #[allow(clippy::needless_pass_by_value)]
 #[instrument(skip(conn))]
 pub fn background_task(

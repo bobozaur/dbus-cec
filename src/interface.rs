@@ -1,4 +1,4 @@
-//! Module containing the `DBus` interface and `DBus` related code,
+//! Module containing the D-Bus interface and D-Bus related code,
 //! arranged for visibility and locality.
 
 use std::borrow::Cow;
@@ -10,13 +10,13 @@ use zbus::{DBusError, interface};
 
 use crate::{power_status::CecPowerStatus, request::CecRequest};
 
-/// `DBus` interface that sends requrests to the background task and awaits their response.
+/// D-Bus interface that sends requrests to the background task and awaits their response.
 #[derive(Debug)]
 pub struct CecIface(pub mpsc::Sender<CecRequest>);
 
 pub const SERVICE_NAME: &str = "com.home.HdmiCec";
 
-/// Error returned by the `DBus` interface [`CecIface`].
+/// Error returned by the D-Bus interface [`CecIface`].
 #[derive(DBusError, Debug)]
 #[zbus(prefix = "com.home.HdmiCec")]
 pub enum CecError {
@@ -34,7 +34,7 @@ impl CecIface {
     /// Sends a power on request to the CEC device and awaits its response.
     #[instrument(skip(self), err, ret)]
     async fn power_on(&self) -> Result<(), CecError> {
-        tracing::debug!("DBus interface PowerOn called");
+        tracing::debug!("D-Bus interface PowerOn called");
         let (tx, rx) = oneshot::channel();
         self.0
             .send(CecRequest::On(tx))
@@ -46,7 +46,7 @@ impl CecIface {
     /// Sends a power off request to the CEC device and awaits its response.
     #[instrument(skip(self), err, ret)]
     async fn power_off(&self) -> Result<(), CecError> {
-        tracing::debug!("DBus interface PowerOff called");
+        tracing::debug!("D-Bus interface PowerOff called");
         let (tx, rx) = oneshot::channel();
         self.0
             .send(CecRequest::Off(tx))
@@ -58,7 +58,7 @@ impl CecIface {
     /// Sends a power status request to the CEC device and awaits its response.
     #[instrument(skip(self), ret)]
     async fn power_status(&self) -> CecPowerStatus {
-        tracing::debug!("DBus interface PoweStatus called");
+        tracing::debug!("D-Bus interface PoweStatus called");
         let (tx, rx) = oneshot::channel();
         self.0
             .send(CecRequest::Status(tx))

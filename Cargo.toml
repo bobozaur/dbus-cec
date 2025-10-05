@@ -1,6 +1,6 @@
 [package]
 name = "dbus-cec"
-description = "Library for creating daemons to control CEC devices over DBus"
+description = "Library for creating daemons to control CEC devices over D-Bus"
 version.workspace = true
 authors.workspace = true
 edition.workspace = true

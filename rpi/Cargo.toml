@@ -1,6 +1,6 @@
 [package]
 name = "rpi"
-description = "Raspberry Pi DBus daemon for TV power control through HDMI-CEC "
+description = "Raspberry Pi D-Bus daemon for TV power control through HDMI-CEC "
 version.workspace = true
 authors.workspace = true
 edition.workspace = true
