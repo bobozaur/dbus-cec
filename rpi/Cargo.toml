@@ -1,5 +1,5 @@
 [package]
-name = "rpi"
+name = "rpi-dbus-cec"
 description = "Raspberry Pi D-Bus daemon for TV power control through HDMI-CEC "
 version.workspace = true
 authors.workspace = true
@@ -8,12 +8,11 @@ repository.workspace = true
 license.workspace = true
 
 [package.metadata.deb]
-name = "dbus-cec"
-maintainer-scripts = "../debian/"
+maintainer-scripts = "debian/"
 systemd-units = {}
 depends = ["libcec6", "libp8-platform2"]
 assets = [
-    { source = "target/release/rpi", dest = "/usr/bin/dbus-cec", mode = "0755" },
+    { source = "target/release/rpi-dbus-cec", dest = "/usr/bin/rpi-dbus-cec", mode = "0755" },
     { source = "../assets/com.home.HdmiCec.conf", dest = "/usr/share/dbus-1/system.d/com.home.HdmiCec.conf", mode = "0644" }
 ]
 

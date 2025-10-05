@@ -1,4 +1,4 @@
-# Raspberry Pi <-> TV
+# rpi-dbus-cec
 
 Raspberry Pi systemd D-Bus service for TV power control through HDMI-CEC.
 
@@ -55,8 +55,8 @@ Then, run the following commands to build the release and create the Debian pack
 
 ```bash
 docker run --privileged --rm tonistiigi/binfmt --install all
-cross build --release --target aarch64-unknown-linux-gnu -p rpi
-cargo deb --target aarch64-unknown-linux-gnu --no-build -p rpi
+cross build --release --target aarch64-unknown-linux-gnu -p rpi-dbus-cec
+cargo deb --target aarch64-unknown-linux-gnu --no-build -p rpi-dbus-cec
 ```
 
 ## License

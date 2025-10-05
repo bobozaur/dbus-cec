@@ -1,12 +1,12 @@
 [Unit]
-Description=D-Bus service for TV power control over HDMI-CEC
+Description=Raspberry Pi D-Bus service for TV power control over HDMI-CEC
 After=syslog.target network.target multi-user.target
 
 [Service]
 Type=simple
 Restart=always
 RestartSec=5
-ExecStart=/usr/bin/dbus-cec
+ExecStart=/usr/bin/rpi-dbus-cec
 StandardOutput=journal
 StandardError=journal
 
