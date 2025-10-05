@@ -38,7 +38,7 @@ cec-rs = { version = "12", default-features = false }
 serde = { version = "1", default-features = false, features = ["derive", "std"] }
 tokio = { version = "1", default-features = false, features = ["macros", "rt", "sync"] }
 tracing = { version = "0.1", default-features = false, features = ["attributes", "std"] }
-tracing-subscriber = { version = "0.3", default-features = false, features = ["ansi", "fmt", "env-filter", "smallvec", "std", "tracing-log"]}
+tracing-subscriber = { version = "0.3", default-features = false, features = ["ansi", "fmt", "env-filter", "smallvec", "std", "tracing-log"] }
 zbus = { version = "5", default-features = false, features = ["tokio"] }
 
 [workspace.lints.clippy]
