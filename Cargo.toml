@@ -23,7 +23,7 @@ codegen-units = 1
 strip = "symbols"
 
 [workspace]
-members = [".", "rpi"]
+members = [".", "rpi-tv-cec"]
 
 [workspace.package]
 version = "1.0.0"

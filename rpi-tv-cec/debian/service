@@ -6,7 +6,7 @@ After=syslog.target network.target multi-user.target
 Type=simple
 Restart=always
 RestartSec=5
-ExecStart=/usr/bin/rpi-dbus-cec
+ExecStart=/usr/bin/rpi-tv-cec
 StandardOutput=journal
 StandardError=journal
 

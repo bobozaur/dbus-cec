@@ -12,7 +12,7 @@ The daemon exposes a D-Bus service to control the power state of a connected HDM
 
 ## Implementations
 
-An implementation for controlling a TV from a Raspberry Pi can be found at [rpi](./rpi).
+An implementation for controlling a TV from a Raspberry Pi can be found at [rpi-tv-cec](./rpi-tv-cec).
 
 ## License
 

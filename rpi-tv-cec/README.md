@@ -1,4 +1,4 @@
-# rpi-dbus-cec
+# rpi-tv-cec
 
 Raspberry Pi systemd D-Bus service for TV power control through HDMI-CEC.
 
@@ -9,7 +9,7 @@ Raspberry Pi systemd D-Bus service for TV power control through HDMI-CEC.
 
 ## Installation
 
-The project is packaged as a Debian (`.deb`) package. The package installs the `dbus-cec` binary, the D-Bus configuration file, and a systemd service.
+The project is packaged as a Debian (`.deb`) package. The package installs the `rpi-tv-cec` binary, the D-Bus configuration file, and a systemd service.
 
 The package depends on `libcec6` and `libp8-platform2`, which should be installed on the system.
 
@@ -55,8 +55,8 @@ Then, run the following commands to build the release and create the Debian pack
 
 ```bash
 docker run --privileged --rm tonistiigi/binfmt --install all
-cross build --release --target aarch64-unknown-linux-gnu -p rpi-dbus-cec
-cargo deb --target aarch64-unknown-linux-gnu --no-build -p rpi-dbus-cec
+cross build --release --target aarch64-unknown-linux-gnu -p rpi-tv-cec
+cargo deb --target aarch64-unknown-linux-gnu --no-build -p rpi-tv-cec
 ```
 
 ## License

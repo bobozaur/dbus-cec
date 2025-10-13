@@ -1324,7 +1324,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rpi-dbus-cec"
+name = "rpi-tv-cec"
 version = "1.0.0"
 dependencies = [
  "dbus-cec",
