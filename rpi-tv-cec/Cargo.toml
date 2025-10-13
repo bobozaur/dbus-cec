@@ -10,7 +10,7 @@ license.workspace = true
 [package.metadata.deb]
 maintainer-scripts = "debian/"
 systemd-units = {}
-depends = ["libcec6", "libp8-platform2"]
+depends = ["libcec6 | libcec7 | libcec8", "libp8-platform2"]
 assets = [
     "$auto",
     { source = "../assets/com.home.HdmiCec.conf", dest = "/usr/share/dbus-1/system.d/com.home.HdmiCec.conf", mode = "0644" }
